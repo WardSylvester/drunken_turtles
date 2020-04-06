@@ -1,0 +1,13 @@
+My CSC 500 class was tasked with creating a program that simulated "a drunken turtle's random walk." In this repository, I have included our final project documentation and program code.
+
+The idea of the program was to create a turtle that could be used to randomly move on a grid in one of four directions...up, down, left, right. We then used the grid to calculate the turtle's movement statistics. We ended up allowing the user to create multiple turtles in one "round." 
+
+The project documentation contains our plan/schedule, design plan, and test plan.
+
+Contributors:
+- Ilya Samokhyalov
+- Evan Kurpiewski
+- Naz Yasar
+- Ahmet Uygun
+- Asli Onturk
+- Cagatay Ozdinc
