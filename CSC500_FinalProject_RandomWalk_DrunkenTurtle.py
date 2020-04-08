@@ -124,6 +124,7 @@ class Drunk(turtle.Turtle):
         else:
             return False
 
+
 # -- This function sets the amount of moves the player would like and does so in an error catching way
 def setSeconds():
     flag = True
@@ -142,6 +143,7 @@ def setSeconds():
             print("Ups! I bet, it is not even a number! Let's try again!")
             print()
     return seconds
+
 
 # -- This function sets the "key" or how many creatures the user wants and does so in an error catching way.
 def setKey():
@@ -162,12 +164,14 @@ def setKey():
             print()
     return key
 
+
 # -- This function adds together all the distances that the turtles traveled.
 def calc_total_dist(creatures):
     total_dist = 0
     for x in creatures:
         total_dist += (Drunk.calcDistance(x))
     return total_dist
+
 
 # -- This function calculates the average distance traveled of all the turtles.
 def calc_avg_dist(creatures):
@@ -177,61 +181,72 @@ def calc_avg_dist(creatures):
     avg_dist = total_dist/len(creatures)
     return avg_dist
 
+
 def calc_total_moves(creatures):
     total_moves = 0
     for x in creatures:
         total_moves += (Drunk.returnMove(x))
     return total_moves
 
-# -- Main --
 
-print()
-print('-'*60)
-print("This program simulates a random (Drunkard's) Walk")
-print('-'*60)
-print()
+def greeting():
+    print()
+    print('-' * 60)
+    print("This program simulates a random (Drunkard's) Walk")
+    print('-' * 60)
+    print()
 
-# -- These functions capture the amount of seconds and amount of creatures the user wants
-seconds = int(setSeconds())
-print()
-key = int(setKey())
-print()
-print("Great! Let's Rock'n'Roll it!")
-print()
 
-# -- This sets up the windows an even 800 by 800
-turtle.setup(800, 800)
-screen_width = 800
-screen_height = 800
-window = turtle.Screen()
-turtle.hideturtle()
-turtle.bgpic("water.gif")
-window.title('Drunk Turtles')
-drunkTurtle = turtle.getturtle()
+def getData():
+    # -- These functions capture the amount of seconds and amount of creatures the user wants
+    seconds = int(setSeconds())
+    print()
+    key = int(setKey())
+    print()
+    print("Great! Let's Rock'n'Roll it!")
+    print()
+    return seconds, key
 
-# -- This creates the grid in the same window we previously created
-#grid(drunkTurtle, window)
+def setup():
+    # -- This sets up the windows an even 800 by 800
+    turtle.setup(800, 800)
+    screen_width = 800
+    screen_height = 800
+    window = turtle.Screen()
+    turtle.hideturtle()
+    turtle.bgpic("water.gif")
+    window.title('Drunk Turtles')
+    #drunkTurtle = turtle.getturtle()
+    return screen_width, screen_height, window
 
-# -- This creates an empty list -- creatures. It then iterates using a for loop in range from 0 to the "key" or
-# -- the amount of creatures the player wants to be created. Each loop it iterates a new instance of the Object "Drunk".
-# -- The objects are initialized at random on the board.
-creatures = []
-for k in range(0, key):
-    creatures.append(Drunk())
 
-# -- This creates the movement of the creatures. For range of 0 to the amount of seconds the user wants to goes through
-# -- each Drunk object in the creature list one at a time. It generates a random angle and then checks the creature to
-# -- see if the creature is on an edge. If it is on an edge it changes the angle to the opposite direction of the edge
-# -- and then moves. If it is not on an edge it moves based on the random angle generated initially. It also sets the
-# -- destination value in each object to the new location it has moved too.
+def createTurtles(key):
+    # This creates an empty list -- creatures. It then iterates using a for loop in range from 0 to the "key" or
+    # the amount of creatures the player wants to be created. Each loop it iterates a new instance of the Object "Drunk"
+    # The objects are initialized at random on the board.
+    creatures = []
+    for k in range(0, key):
+        creatures.append(Drunk())
+    return creatures
 
-# -- set start time
-start_time = time.time()
 
-# -- variable used to stop movement when number of seconds reached
-terminate = False
+def startTimer():
+    # -- set start time
+    start_time = time.time()
+    return start_time
 
-while not terminate:
+
+def movement(creatures, screen_width, screen_height, start_time, seconds):
+    # This creates the movement of the creatures. For range of 0 to the amount of seconds the user wants to goes through
+    # each Drunk object in the creature list one at a time. It generates a random angle and then checks the creature to
+    # see if the creature is on an edge. If it is on an edge it changes the angle to the opposite direction of the edge
+    # and then moves. If it is not on an edge it moves based on the random angle generated initially. It also sets the
+    # destination value in each object to the new location it has moved too.
+
+    # variable used to stop movement when number of seconds reached
+    terminate = False
+
+    while not terminate:
         for b in creatures:
             i = Drunk.setAngle(b)
             if Drunk.atLeftEdge(b, screen_width):
@@ -261,39 +276,98 @@ while not terminate:
             if time.time() - start_time > seconds:
                 terminate = True
 
-# -- This function then iterates through each Drunk object in the list creatures and uses the DrawDistance function
-# -- to draw a blue line from its starting point to its final destination.
-for c in creatures:
-    Drunk.DrawDistance(c)
 
-# -- This puts all data for each creature in list to make it easier to print in table form
-e = 1
-creature_data = [['Turtle','Start x','Start y','End x','End y','Distance Traveled','Moves Made']]
-for d in creatures:
-    lst = ['Turtle_'+ str(e),(Drunk.returnHomeX(d)),(Drunk.returnHomeY(d)),(Drunk.returnDestX(d)),(Drunk.returnDestY(d)),(Drunk.calcDistance(d)),(Drunk.returnMove(d))]
-    creature_data.append(lst)
-    e += 1
+def draw(creatures):
+    # -- This function then iterates through each Drunk object in the list creatures and uses the DrawDistance function
+    # -- to draw a blue line from its starting point to its final destination.
+    for c in creatures:
+        Drunk.DrawDistance(c)
 
-# -- This prints out the starting x and y coordinates and the ending x and y coordinates as well as the distance
-# -- travelled by the creature at the end, total distance traveled by all turtles, and average distance traveled
-print("\n\n")
-print("Data for program run for " + str(seconds) + " seconds and with " + str(key) + " creature(s):")
-dash = '-' * 80
 
-for i in range(len(creature_data)):
-    if i == 0:
-      print(" ")  
-      print(dash)
-      print('{:<4s}{:>14s}{:>9s}{:>9s}{:>9s}{:>20s}{:>12s}'.format(creature_data[i][0],creature_data[i][1],creature_data[i][2],creature_data[i][3],creature_data[i][4],creature_data[i][5],creature_data[i][6]))
-      print(dash)
-    else:
-      print('{:<6s}{:>10.1f}{:>10.1f}{:>10.1f}{:>10.1f}{:>11.1f}{:>14.1f}'.format(creature_data[i][0],creature_data[i][1],creature_data[i][2],creature_data[i][3],creature_data[i][4],creature_data[i][5],creature_data[i][6]))
+def createList(creatures):
+    # -- This puts all data for each creature in list to make it easier to print in table form
+    e = 1
+    creature_data = [['Turtle', 'Start x', 'Start y', 'End x', 'End y', 'Distance Traveled', 'Moves Made']]
+    for d in creatures:
+        lst = ['Turtle_' + str(e), (Drunk.returnHomeX(d)), (Drunk.returnHomeY(d)), (Drunk.returnDestX(d)),
+               (Drunk.returnDestY(d)), (Drunk.calcDistance(d)), (Drunk.returnMove(d))]
+        creature_data.append(lst)
+        e += 1
+    return creature_data
 
-print('\nTotal Distance Traveled: ' + str('%.2f' % calc_total_dist(creatures)))
-print('Average Distance Traveled: ' + str('%.2f' % calc_avg_dist(creatures)))
-print('Total Moves Made: ' + str(calc_total_moves(creatures)))
+
+def tableHeading(seconds, key):
+    print("\n\n")
+    print("Data for program run for " + str(seconds) + " seconds and with " + str(key) + " creature(s):")
+
+
+def printTable(creature_data):
+    # -- This prints out the starting x and y coordinates and the ending x and y coordinates as well as the distance
+    # -- travelled by the creature at the end, total distance traveled by all turtles, and average distance traveled
+    dash = '-' * 80
+    for i in range(len(creature_data)):
+        if i == 0:
+            print(" ")
+            print(dash)
+            print('{:<4s}{:>14s}{:>9s}{:>9s}{:>9s}{:>20s}{:>12s}'.format(creature_data[i][0], creature_data[i][1],
+                                                                         creature_data[i][2], creature_data[i][3],
+                                                                         creature_data[i][4], creature_data[i][5],
+                                                                         creature_data[i][6]))
+            print(dash)
+        else:
+            print('{:<6s}{:>10.1f}{:>10.1f}{:>10.1f}{:>10.1f}{:>11.1f}{:>14.1f}'.format(creature_data[i][0],
+                                                                                        creature_data[i][1],
+                                                                                        creature_data[i][2],
+                                                                                        creature_data[i][3],
+                                                                                        creature_data[i][4],
+                                                                                        creature_data[i][5],
+                                                                                        creature_data[i][6]))
+
+
+def calcResults(creatures):
+    print('\nTotal Distance Traveled: ' + str('%.2f' % calc_total_dist(creatures)))
+    print('Average Distance Traveled: ' + str('%.2f' % calc_avg_dist(creatures)))
+    print('Total Moves Made: ' + str(calc_total_moves(creatures)))
+
+def exit(window):
+    # -- This makes it so the turtle window only closes after a click and will stay open for observation until that has
+    # -- happened.
+    window.exitonclick()
+
+def main():
+    greeting()
+    seconds, key = getData()
+    screen_width, screen_height, window = setup()
+    creatures = createTurtles(key)
+    start_time = startTimer()
+    movement(creatures, screen_width, screen_height, start_time, seconds)
+    draw(creatures)
+    creature_data = createList(creatures)
+    tableHeading(seconds, key)
+    printTable(creature_data)
+    calcResults(creatures)
+    exit(window)
+
+
+main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    
-# -- This makes it so the turtle window only closes after a click and will stay open for observation until that has
-# -- happened.
-window.exitonclick()
+
